@@ -8,6 +8,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,6 +19,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.Objects;
 
 
 public class TranslateActivity extends ActionBarActivity {
@@ -50,7 +55,7 @@ public class TranslateActivity extends ActionBarActivity {
 
     public void onClick(View view) {
         TranslateTask translateTask = new TranslateTask();
-        translateTask.execute("aaa");
+        translateTask.execute();
     }
 
 
@@ -58,15 +63,15 @@ public class TranslateActivity extends ActionBarActivity {
 
         @Override
         protected String doInBackground(String... params) {
+            EditText wordText = (EditText)findViewById(R.id.wordText);
+
             String link = "https://translate.yandex.net/api/v1.5/tr.json/translate";
             String key = "trnsl.1.1.20150217T101240Z.94ed0457947c725e.dfd4eac0e7d9b45dad578129dc354024e4ce3a69";
-            String text = "Hello";
+            String text = wordText.getText().toString();
             String lang = "en-ru";
 
             HttpURLConnection httpURLConnection;
             URL url;
-
-            String returnMessage;
 
             try {
                 url = new URL(link + "?key=" + key + "&text=" + text + "&lang=" + lang);
@@ -74,17 +79,18 @@ public class TranslateActivity extends ActionBarActivity {
                 httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setRequestMethod("GET");
 
-                returnMessage = httpURLConnection.getResponseMessage();
-                BufferedReader in = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
-                String inputLine;
-                StringBuffer response = new StringBuffer();
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
+                if (httpURLConnection.getResponseCode() == 200) {
+                    BufferedReader in = new BufferedReader(
+                            new InputStreamReader(httpURLConnection.getInputStream()));
+                    String inputLine;
+                    StringBuffer responseJSON = new StringBuffer();
+                    while ((inputLine = in.readLine()) != null) {
+                        responseJSON.append(inputLine);
+                    }
+                    in.close();
+                    return responseJSON.toString();
                 }
-                in.close();
-
-                return returnMessage;
-
+                return "error!";
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -97,10 +103,20 @@ public class TranslateActivity extends ActionBarActivity {
         }
 
         @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
+        protected void onPostExecute(String resultJSON) {
+            super.onPostExecute(resultJSON);
             EditText translateText = (EditText)findViewById(R.id.translateText);
-            translateText.setText("result = " + result);
+            String translateWord = null;
+
+            try {
+                JSONObject jsonObject = new JSONObject(resultJSON);
+                JSONArray jsonArray = jsonObject.getJSONArray("text");
+                translateWord = jsonArray.get(0).toString();
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            translateText.setText(translateWord);
         }
     }
 }
