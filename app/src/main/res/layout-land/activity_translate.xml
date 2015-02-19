@@ -7,11 +7,11 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="marinaaaniram.android_translate.TranslateActivity"
     android:id="@+id/translate"
-    android:focusable="false">
+    android:focusable="true">
 
     <Button
         android:layout_width="250dp"
-        android:layout_height="100dp"
+        android:layout_height="70dp"
         android:text="Translate!"
         android:id="@+id/translateButton"
         android:onClick="onClick"
@@ -22,9 +22,9 @@
         android:textSize="30sp"
         android:textAlignment="center"
         android:singleLine="true"
-        android:layout_marginBottom="33dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp" />
 
     <EditText
         android:layout_width="match_parent"
@@ -42,9 +42,8 @@
         android:textAlignment="center"
         android:layout_gravity="center|right"
         android:layout_alignWithParentIfMissing="false"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignStart="@+id/wordText"
+        android:layout_centerInParent="true" />
 
     <EditText
         android:layout_width="match_parent"
@@ -60,9 +59,7 @@
         android:textSize="30dp"
         android:textAlignment="center"
         android:layout_alignWithParentIfMissing="false"
-        android:layout_marginBottom="75dp"
-        android:layout_above="@+id/translateText"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp" />
 
 </RelativeLayout>
