@@ -1,5 +1,6 @@
 package marinaaaniram.android_translate;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -47,6 +48,8 @@ public class TranslateActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(TranslateActivity.this, AboutActivity.class);
+            startActivity(intent);
             return true;
         }
 
@@ -57,7 +60,6 @@ public class TranslateActivity extends ActionBarActivity {
         TranslateTask translateTask = new TranslateTask();
         translateTask.execute();
     }
-
 
     class TranslateTask extends AsyncTask<String, Void, String> {
 
